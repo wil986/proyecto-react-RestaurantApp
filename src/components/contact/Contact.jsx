@@ -1,7 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./contact.css";
+import appFirebase from '../../firebase';
+
+import {getFirestore, collection, addDoc} from 'firebase/firestore';
+
+const db = getFirestore(appFirebase)
 
 const Contact = () => {
+
+    const valorInicial = {
+        name: '',
+        email: '',
+        project: ''
+    }
+
+    const [user, setUser] = useState(valorInicial)
+
+    const capturarInputs = (e) =>{
+        const {name, value} = e.target;
+        setUser({...user, [name]:value})
+    }
+
+    const guardarDatos = async(e)=>{
+        e.preventDefault();
+        console.log(user);
+        try {
+            await addDoc(collection(db,'usuarios'),{
+                ...user
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        setUser({...valorInicial})
+    }
+
   return (
     <section className="contact section" id="contact">
         <h2 className="section__title">Comuníquese con nosotros</h2>
@@ -56,7 +88,7 @@ const Contact = () => {
         <div className="contact__content">
             <h3 className="contact__title">Haz una reserva</h3>
         
-            <form className="contact__form">
+            <form className="contact__form" onSubmit={guardarDatos}>
                 <div className="contact__form-div">
                     <label className="contact__form-tag">Nombre</label>
                     <input 
@@ -64,6 +96,7 @@ const Contact = () => {
                     name="name" 
                     className="contact__form-input" 
                     placeholder="Escribe tu nombre"
+                    onChange={capturarInputs} value={user.name}
                     />
                 </div>
 
@@ -74,6 +107,7 @@ const Contact = () => {
                     name="email" 
                     className="contact__form-input" 
                     placeholder="Escribe tu correo"
+                    onChange={capturarInputs} value={user.email}
                     />
                 </div>
 
@@ -85,6 +119,7 @@ const Contact = () => {
                     rows="10"
                     className='contact__form-input' 
                     placeholder='Detalla cómo te gustaría tu reservación'
+                    onChange={capturarInputs} value={user.project}
                     ></textarea>
                 </div>
 
