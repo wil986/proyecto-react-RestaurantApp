@@ -118,7 +118,7 @@ const Contact = () => {
                     cols="30" 
                     rows="10"
                     className='contact__form-input' 
-                    placeholder='Detalla cómo te gustaría tu reservación'
+                    placeholder='Mensajes y comentarios'
                     onChange={capturarInputs} value={user.project}
                     ></textarea>
                 </div>
